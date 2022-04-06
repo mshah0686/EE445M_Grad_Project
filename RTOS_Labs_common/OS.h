@@ -26,6 +26,8 @@
 #define TIME_500US  (TIME_1MS/2)  
 #define TIME_250US  (TIME_1MS/5)
 
+#define TOTAL_PRIORITIES 6
+
 #define JITTERSIZE 64
 
 /**

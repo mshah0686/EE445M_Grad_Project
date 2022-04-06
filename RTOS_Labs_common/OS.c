@@ -26,6 +26,8 @@
 #include "../inc/Timer3A.h"
 #include "../inc/Timer2A.h"
 
+
+
 /**
   * List of TODOs
   *
@@ -98,7 +100,7 @@ void OS_Increment_Time();
 
 /* Function to add tcb to global running linked list */
 void add_running_thread(struct tcb* to_add) {
-  uint32_t priority = to_add->priority;
+  uint32_t priority = to_add->aged_priority;
   
   if (current_thread_ptr == NULL)         /* if there is no currently running thread, run this one */
     current_thread_ptr = to_add;
@@ -118,16 +120,20 @@ void add_running_thread(struct tcb* to_add) {
 
 /* Function to remove TCB from global running linked list */
 void remove_running_thread(struct tcb* to_remove) {
-  uint32_t priority = to_remove->priority;
+  uint32_t priority = to_remove->aged_priority;
+  /* if the to_remove is head */
   if (RunningPtrs[priority] == to_remove) {
+    /* If only thing in list */
     if (RunningPtrs[priority]->next == to_remove) {
       RunningPtrs[priority] = NULL;
     }
+    /* Move RunningPtrs over */
     else {
       RunningPtrs[priority] = to_remove->next;
     }
   }
   
+  /* update next and previous poitners */
 	to_remove->previous->next = to_remove->next;
 	to_remove->next->previous = to_remove->previous;
 }
@@ -142,7 +148,7 @@ void check_for_falling_priority() {
 }
 
 void check_for_rising_priority() {
-  uint32_t curr_priority = current_thread_ptr->priority;
+  uint32_t curr_priority = current_thread_ptr->aged_priority;
   for (int i = 0; i < 6; i++) {
     if (RunningPtrs[i] != NULL && i < curr_priority) {
       RunningPtrs[curr_priority] = current_thread_ptr->next;
@@ -155,13 +161,19 @@ void check_for_rising_priority() {
 }
 
 /* Takes a thread and moves it in the RunPtrs based on aged_priority */
-/* Will add at tail of list */
+/* Will add at tail of list and update RunPtrs as necessary*/
 void update_thread_priority(tcb* thread) {
-  /* make sure thread != current run priority */
-  /* If run_ptrs[thread->aged_priority] is NULL */
-    /* insert at head */
+  remove_running_thread(&thread);
+  add_running_thread(&thread);
+}
 
-  /* else insert at tail based on head pointer */
+/* Goes through running ptrs and finds next thread to run in highes priority */
+tcb* find_next_best_thread_run(void) {
+  for(int i = 0; i < TOTAL_PRIORITIES; i++) {
+    if(RunningPtrs[i] != NULL) {
+      return RunningPtrs[i];
+    }
+  }
 }
 
 /*------------------------------------------------------------------------------
@@ -172,34 +184,44 @@ void update_thread_priority(tcb* thread) {
 void SysTick_Handler(void) {
 	DisableInterrupts();
   /* Current_thread_pointer->ticks = 0 : reset current thread counter bc it just ran */
+  current_thread_ptr->ticks = 0;
 
   /* Update ticks and age certain threads */
   /* for heads in run pointer with priority lower than current */
+  for(int i = current_thread_ptr->aged_priority; i < 6; i++) {
     /* run ptrs-> head.ticks ++ */
-    /* if ticks == 10 */
+    RunningPtrs[i]->ticks++;
+    /* If ticks are at 10 -> need to age */
+    if(RunningPtrs[i]->ticks == 10) {
       /* ticks = 0 */
+      RunningPtrs[i]->ticks = 0;
       /* aged priority -- */
+      RunningPtrs[i]->aged_priority--;
       /* update_thread_priority(tcb*) */
+      update_thread_priority(&RunningPtrs[i]);
+    }
+  }
 
   /* De-age the current_thread if needed */
-    /* current_thread -> aged_priroity = orig_priority
+  if(current_thread_ptr-> aged_priority != current_thread_ptr->orig_priority) {
+    /* current_thread -> aged_priroity = orig_priority*/
+    current_thread_ptr->aged_priority = current_thread_ptr->orig_priority;
     /* update_thread_priority(tcb *) */
+    update_thread_priority(current_thread_ptr);
     /* if priority update happened -> find next best thread to run */
+    tcb* next_to_run = find_next_best_thread_run();
     /* Set next best_thread ticks to 0 */
+    current_thread_ptr->jumpFlag = 1;
     /* Set jump flag and jump tcb */
-    
-  /* If no de-aging, use round robin within that priority */
+    current_thread_ptr->jumpTo = next_to_run;
+
+    /* Update run ptrs ??*/ //TODO
+  } else {
     RunningPtrs[current_thread_ptr->aged_priority] = current_thread_ptr->next;
+  }
+  /* If no de-aging, use round robin within that priority */
   ContextSwitch();		// Change threads
 	EnableInterrupts();
-}
-
-unsigned long OS_LockScheduler(void){
-  // lab 4 might need this for disk formating
-  return 0;// replace with solution
-}
-void OS_UnLockScheduler(unsigned long previous){
-  // lab 4 might need this for disk formating
 }
 
 
@@ -275,7 +297,7 @@ void OS_Wait(Sema4Type *semaPt){
 		if(semaPt->head ==NULL) {
 			semaPt->head = current_thread_ptr;
       current_thread_ptr->sema_next = NULL;
-		} else if (semaPt->head->priority > current_thread_ptr->priority){
+		} else if (semaPt->head->aged_priority > current_thread_ptr->aged_priority){
       current_thread_ptr->sema_next = semaPt->head;
       semaPt->head = current_thread_ptr;
     }
@@ -284,7 +306,7 @@ void OS_Wait(Sema4Type *semaPt){
       struct tcb* current = semaPt->head->sema_next;
       struct tcb* previous = semaPt->head;
       
-      while(current && current->priority <= current_thread_ptr->priority) {
+      while(current && current->aged_priority <= current_thread_ptr->aged_priority) {
         previous = current;
         current = current->sema_next;
       }
@@ -293,7 +315,7 @@ void OS_Wait(Sema4Type *semaPt){
       previous->sema_next = current_thread_ptr;
     }
 		/* Context switch */
-    check_for_falling_priority();
+    //check_for_falling_priority();
 		OS_Suspend();
 	}
   EnableInterrupts();
@@ -335,14 +357,14 @@ void OS_bWait(Sema4Type *semaPt){
 		if(semaPt->head == NULL) {
 			semaPt->head = current_thread_ptr;
       current_thread_ptr->sema_next = NULL;
-		} else if (semaPt->head->priority > current_thread_ptr->priority){
+		} else if (semaPt->head->aged_priority > current_thread_ptr->aged_priority){
       current_thread_ptr->sema_next = semaPt->head;
       semaPt->head = current_thread_ptr;
     } else {
 			/* Add to end or add to where priority is lower than current priority */
 			struct tcb* current = semaPt->head->sema_next;
 			struct tcb* previous = semaPt->head;
-			while(current && current->priority >= current_thread_ptr->priority) {
+			while(current && current->aged_priority >= current_thread_ptr->aged_priority) {
 				previous = current;
 				current = current->sema_next;
 			}
@@ -424,7 +446,9 @@ int OS_AddThread(void(*task)(void), uint32_t stackSize, uint32_t priority){
 	
 	/* set up new thread */
 	new_tcb->orig_priority = priority;
-	
+  new_tcb->aged_priority = priority;
+  new_tcb->ticks = 0;
+
 	/* adding thread to TCB linked list */
 	add_running_thread(new_tcb);
 	
