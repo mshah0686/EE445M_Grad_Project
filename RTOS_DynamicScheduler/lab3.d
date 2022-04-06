@@ -1,0 +1,14 @@
+.\lab3.o: Lab3.c
+.\lab3.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\lab3.o: ../inc/tm4c123gh6pm.h
+.\lab3.o: ../inc/CortexM.h
+.\lab3.o: ../inc/LaunchPad.h
+.\lab3.o: ../inc/PLL.h
+.\lab3.o: ../inc/LPF.h
+.\lab3.o: ../RTOS_Labs_common/UART0int.h
+.\lab3.o: ../RTOS_Labs_common/ADC.h
+.\lab3.o: ../inc/ADCT0ATrigger.h
+.\lab3.o: ../inc/IRDistance.h
+.\lab3.o: ../RTOS_Labs_common/OS.h
+.\lab3.o: ../RTOS_Labs_common/Interpreter.h
+.\lab3.o: ../RTOS_Labs_common/ST7735.h
