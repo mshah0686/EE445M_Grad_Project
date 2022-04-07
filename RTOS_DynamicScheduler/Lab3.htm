@@ -3,11 +3,11 @@
 <title>Static Call Graph - [.\Lab3.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Lab3.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Apr 06 22:45:20 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Apr 07 09:43:03 2022
 <BR><P>
 <H3>Maximum Stack Usage =        104 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
-main &rArr; Test2_TwoThreads_OneAge &rArr; OS_Init &rArr; ST7735_InitR &rArr; ST7735_FillScreenInit &rArr; OS_bSignal &rArr; check_for_rising_priority &rArr; OS_Suspend
+main &rArr; Test1_Basic_RR_Test &rArr; OS_Init &rArr; ST7735_InitR &rArr; ST7735_FillScreenInit &rArr; OS_bSignal &rArr; check_for_rising_priority &rArr; OS_Suspend
 <P>
 <H3>
 Functions with no stack information
@@ -105,8 +105,8 @@ Function Pointers
  <LI><a href="#[1]">NMI_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
  <LI><a href="#[7d]">OS_CountMsTime_Timer5_UserTask</a> from os.o(i.OS_CountMsTime_Timer5_UserTask) referenced from os.o(i.OS_Init)
  <LI><a href="#[7e]">OS_Increment_Time</a> from os.o(i.OS_Increment_Time) referenced from os.o(i.OS_Time_Init)
- <LI><a href="#[7f]">PD1Toggle_thread</a> from dynamic_tester.o(i.PD1Toggle_thread) referenced from dynamic_tester.o(i.Test2_TwoThreads_OneAge)
- <LI><a href="#[80]">PD2Toggle_thread</a> from dynamic_tester.o(i.PD2Toggle_thread) referenced from dynamic_tester.o(i.Test2_TwoThreads_OneAge)
+ <LI><a href="#[7f]">PD1Toggle_thread</a> from dynamic_tester.o(i.PD1Toggle_thread) referenced from dynamic_tester.o(i.Test1_Basic_RR_Test)
+ <LI><a href="#[80]">PD2Toggle_thread</a> from dynamic_tester.o(i.PD2Toggle_thread) referenced from dynamic_tester.o(i.Test1_Basic_RR_Test)
  <LI><a href="#[5d]">PECI0_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
  <LI><a href="#[13]">PWM0Fault_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
  <LI><a href="#[14]">PWM0Generator0_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
@@ -656,7 +656,7 @@ Global Symbols
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EndCritical
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartCritical
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Test2_TwoThreads_OneAge
+<BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Test1_Basic_RR_Test
 </UL>
 
 <P><STRONG><a name="[87]"></a>OS_ClearMsTime</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, os.o(i.OS_ClearMsTime))
@@ -691,7 +691,7 @@ Global Symbols
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIOPortF_Init
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisableInterrupts
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Test2_TwoThreads_OneAge
+<BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Test1_Basic_RR_Test
 </UL>
 
 <P><STRONG><a name="[a9]"></a>OS_InitSemaphore</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, os.o(i.OS_InitSemaphore))
@@ -706,7 +706,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartOS
 <LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Test2_TwoThreads_OneAge
+<BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Test1_Basic_RR_Test
 </UL>
 
 <P><STRONG><a name="[86]"></a>OS_MsTime</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, os.o(i.OS_MsTime))
@@ -774,18 +774,18 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_FillScreenInit
 </UL>
 
-<P><STRONG><a name="[7f]"></a>PD1Toggle_thread</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, dynamic_tester.o(i.PD1Toggle_thread))
-<BR>[Address Reference Count : 1]<UL><LI> dynamic_tester.o(i.Test2_TwoThreads_OneAge)
+<P><STRONG><a name="[7f]"></a>PD1Toggle_thread</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, dynamic_tester.o(i.PD1Toggle_thread))
+<BR>[Address Reference Count : 1]<UL><LI> dynamic_tester.o(i.Test1_Basic_RR_Test)
 </UL>
-<P><STRONG><a name="[80]"></a>PD2Toggle_thread</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, dynamic_tester.o(i.PD2Toggle_thread))
-<BR>[Address Reference Count : 1]<UL><LI> dynamic_tester.o(i.Test2_TwoThreads_OneAge)
+<P><STRONG><a name="[80]"></a>PD2Toggle_thread</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, dynamic_tester.o(i.PD2Toggle_thread))
+<BR>[Address Reference Count : 1]<UL><LI> dynamic_tester.o(i.Test1_Basic_RR_Test)
 </UL>
 <P><STRONG><a name="[93]"></a>PLL_Init</STRONG> (Thumb, 120 bytes, Stack size 0 bytes, pll.o(i.PLL_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Init
 </UL>
 
 <P><STRONG><a name="[ad]"></a>PortD_Init</STRONG> (Thumb, 88 bytes, Stack size 0 bytes, dynamic_tester.o(i.PortD_Init))
-<BR><BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Test2_TwoThreads_OneAge
+<BR><BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Test1_Basic_RR_Test
 </UL>
 
 <P><STRONG><a name="[b3]"></a>RxFifo_Init</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, uart0int.o(i.RxFifo_Init))
@@ -834,7 +834,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_AddThread
 </UL>
 
-<P><STRONG><a name="[9]"></a>SysTick_Handler</STRONG> (Thumb, 192 bytes, Stack size 16 bytes, os.o(i.SysTick_Handler))
+<P><STRONG><a name="[9]"></a>SysTick_Handler</STRONG> (Thumb, 190 bytes, Stack size 16 bytes, os.o(i.SysTick_Handler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16 + Unknown Stack Size
 <LI>Call Chain = SysTick_Handler
 </UL>
@@ -851,9 +851,9 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Launch
 </UL>
 
-<P><STRONG><a name="[ac]"></a>Test2_TwoThreads_OneAge</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, dynamic_tester.o(i.Test2_TwoThreads_OneAge))
+<P><STRONG><a name="[ac]"></a>Test1_Basic_RR_Test</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, dynamic_tester.o(i.Test1_Basic_RR_Test))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96 + Unknown Stack Size
-<LI>Call Chain = Test2_TwoThreads_OneAge &rArr; OS_Init &rArr; ST7735_InitR &rArr; ST7735_FillScreenInit &rArr; OS_bSignal &rArr; check_for_rising_priority &rArr; OS_Suspend
+<LI>Call Chain = Test1_Basic_RR_Test &rArr; OS_Init &rArr; ST7735_InitR &rArr; ST7735_FillScreenInit &rArr; OS_bSignal &rArr; check_for_rising_priority &rArr; OS_Suspend
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Launch
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Init
@@ -976,9 +976,9 @@ Global Symbols
 
 <P><STRONG><a name="[7c]"></a>main</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, dynamic_tester.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104 + Unknown Stack Size
-<LI>Call Chain = main &rArr; Test2_TwoThreads_OneAge &rArr; OS_Init &rArr; ST7735_InitR &rArr; ST7735_FillScreenInit &rArr; OS_bSignal &rArr; check_for_rising_priority &rArr; OS_Suspend
+<LI>Call Chain = main &rArr; Test1_Basic_RR_Test &rArr; OS_Init &rArr; ST7735_InitR &rArr; ST7735_FillScreenInit &rArr; OS_bSignal &rArr; check_for_rising_priority &rArr; OS_Suspend
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Test2_TwoThreads_OneAge
+<BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Test1_Basic_RR_Test
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL>

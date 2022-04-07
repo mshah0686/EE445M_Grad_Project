@@ -81,24 +81,35 @@ void PortD_Init(void){
 // outputs: none
 void Interpreter(void);    // just a prototype, link to your interpreter
 
-
+uint32_t count1;
+uint32_t count2;
+uint32_t count3;
+uint32_t error;
 
 /* BASIC ROUND ROBIN TEST */
 // Two threads of same priority, should toggle PD1 and PD2 and switch between the two
 void PD1Toggle_thread() {
 	while(1) {
 		PF1 ^=0x02;
+		count1++;
 	}
 }
 
 void PD2Toggle_thread() {
 	while(1) {
 		PF2 ^= 0x04;
+		count2++;
 	}
 }
 
 void PD3Toggle_thread() {
-  PD3 ^= 0x08;
+	if(count2==0) {
+		error++;
+	}
+	while(1) {
+		PF3 ^= 0x08;
+		count3++;
+	}
 }
 
 int Test1_Basic_RR_Test() {
@@ -121,6 +132,10 @@ int Test1_Basic_RR_Test() {
 int Test2_TwoThreads_OneAge() {
   OS_Init();
   NumCreated = 0;
+	count1 = 0;
+	count2 = 0;
+	count3 = 0;
+	error = 0;
   PortD_Init();
   NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 0);
   NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
@@ -141,7 +156,7 @@ int Test3_ThreeThreads_TwoAge() {
   NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 0);
   NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
   NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 1);
-  OS_Launch(TIME_2MS);
+  OS_Launch(TIME_2MS*5);
   return 0;
 }
 
@@ -155,12 +170,12 @@ int Test3_ThreeThreads_TwoAge_DiffPri() {
   PortD_Init();
   NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 0);
   NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
-  NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 2);
+  NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 5);
   OS_Launch(TIME_2MS);
   return 0;
 }
 
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
-  Test2_TwoThreads_OneAge();
+  Test1_Basic_RR_Test();
 }
