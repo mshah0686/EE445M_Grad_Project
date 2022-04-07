@@ -50,6 +50,9 @@ uint32_t NumThreadsCreated;
 uint32_t SystemMSCounter;
 uint32_t MalleableMSCounter;
 
+/* For sleep and signal -> waking thread of higher priority*/
+uint8_t higher_pri_thread_added_flag;
+
 /* Measuring interrupts disabled time */
 uint32_t int_max_disable_time;
 long int_total_disable_time;
@@ -223,7 +226,15 @@ void SysTick_Handler(void) {
     current_thread_ptr->jumpTo = next_to_run;
 
     /* Update run ptrs ??*/ //TODO
+  } else if(higher_pri_thread_added_flag ==1) {
+    /* Clear flag */
+    higher_pri_thread_added_flag = 0;
+    /* find next best to run */
+    tcb* next_to_run = find_next_best_thread_run();
+    current_thread_ptr->jumpFlag = 1;
+    current_thread_ptr->jumpTo = next_to_run;
   } else {
+    /* No deaging, just do simple round robin */
     RunningPtrs[current_thread_ptr->aged_priority] = current_thread_ptr->next;
   }
   /* If no de-aging, use round robin within that priority */
@@ -665,7 +676,7 @@ void OS_Sleep(uint32_t sleepTime){
 			current_thread_ptr->sleep_count = difference;
 		}
 	}
-  
+
   TIMER5_TAV_R = TIMER5_MS_TIME_PERIOD - 1;
   
 	/* Context switch to new thread: next best thread to run */
@@ -870,20 +881,27 @@ void OS_CountMsTime_Timer5_UserTask() {
 	
 	/* Check sleeping thread at head to wake if done */
 	if(sleep_list_head) sleep_list_head->sleep_count--;
-	
+	struct tcb* temp;
 	
 	/* If head is done -> add to global list*/
 	while(sleep_list_head && sleep_list_head->sleep_count ==0) {
+    /* Reset ticks and priorities */
+    sleep_list_head->aged_priority = sleep_list_head->orig_priority;
+    sleep_list_head->ticks = 0;
+
 		/* Add tcb to running linked list */
 		add_running_thread(sleep_list_head);
 		
 		/* Move sleep head */
-		struct tcb* temp = sleep_list_head;
+		temp = sleep_list_head;
 		sleep_list_head = sleep_list_head->sleep_next;
 		temp->sleep_next = NULL;
 	}
 
-  check_for_rising_priority();
+  /* Set special flag for next systick handler to check for higher priority thread */
+  if(temp->orig_priority < current_thread_ptr->aged_priority) {
+    higher_pri_thread_added_flag = 1;
+  }
 	EnableInterrupts();
 }
 

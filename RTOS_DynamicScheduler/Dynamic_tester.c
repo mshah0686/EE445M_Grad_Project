@@ -88,24 +88,56 @@ uint32_t error;
 
 /* BASIC ROUND ROBIN TEST */
 // Two threads of same priority, should toggle PD1 and PD2 and switch between the two
+void PD0Toggle_thread() {
+	while(1) {
+		PD0 ^=0x01;
+		count1++;
+	}
+}
+
 void PD1Toggle_thread() {
 	while(1) {
-		PF1 ^=0x02;
+		PD1 ^=0x02;
 		count1++;
 	}
 }
 
 void PD2Toggle_thread() {
 	while(1) {
-		PF2 ^= 0x04;
+		PD2 ^= 0x04;
 		count2++;
 	}
 }
 
 void PD3Toggle_thread() {
-	if(count2==0) {
-		error++;
+	while(1) {
+		PD3 ^= 0x08;
+		count3++;
 	}
+}
+
+void PF0Toggle_thread() {
+	while(1) {
+		PF0 ^=0x01;
+		count1++;
+	}
+}
+
+void PF1Toggle_thread() {
+	while(1) {
+		PF1 ^=0x02;
+		count1++;
+	}
+}
+
+void PF2Toggle_thread() {
+	while(1) {
+		PF2 ^= 0x04;
+		count2++;
+	}
+}
+
+void PF3Toggle_thread() {
 	while(1) {
 		PF3 ^= 0x08;
 		count3++;
@@ -171,6 +203,25 @@ int Test3_ThreeThreads_TwoAge_DiffPri() {
   NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 0);
   NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
   NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 5);
+  OS_Launch(TIME_2MS);
+  return 0;
+}
+
+
+int Test4_ManyThreads_DiffPri() {
+  OS_Init();
+  NumCreated = 0;
+  PortD_Init();
+
+  NumCreated += OS_AddThread(&PD0Toggle_thread, 128, 0);
+  NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 1);
+  NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
+  NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 2);
+  NumCreated += OS_AddThread(&PF0Toggle_thread, 128, 2);
+  NumCreated += OS_AddThread(&PF1Toggle_thread, 128, 3);
+  NumCreated += OS_AddThread(&PF2Toggle_thread, 128, 3);
+  NumCreated += OS_AddThread(&PF3Toggle_thread, 128, 4);
+
   OS_Launch(TIME_2MS);
   return 0;
 }
