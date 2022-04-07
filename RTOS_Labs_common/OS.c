@@ -118,7 +118,8 @@ void add_running_thread(struct tcb* to_add) {
 	}
 }
 
-/* Function to remove TCB from global running linked list */
+/* Function to remove TCB from global running linked list 
+  Updats runningPtrs to correct pointer*/
 void remove_running_thread(struct tcb* to_remove) {
   uint32_t priority = to_remove->aged_priority;
   /* if the to_remove is head */
@@ -626,6 +627,10 @@ void OS_Sleep(uint32_t sleepTime){
   
 	/* Remove from linked list */
 	remove_running_thread(current_thread_ptr);
+
+  /* Reset aging and ticks because this thread is sleeping */
+  current_thread_ptr->aged_priority = current_thread_ptr->orig_priority;
+  current_thread_ptr->ticks = 0;
   
 	/* Move TCB to seperate linked list */
 	if(sleep_list_head == NULL) {
@@ -663,8 +668,11 @@ void OS_Sleep(uint32_t sleepTime){
   
   TIMER5_TAV_R = TIMER5_MS_TIME_PERIOD - 1;
   
-	/* Context switch to new thread */
-  check_for_falling_priority();
+	/* Context switch to new thread: next best thread to run */
+  tcb* next_thread = find_next_best_thread_run();
+  current_thread_ptr->jumpFlag = 1;
+  current_thread_ptr->jumpTo = next_thread;
+
 	OS_Suspend();  // NOTE: thread going to sleep has to preserve next pointer
   EnableInterrupts();
 };  
@@ -703,7 +711,7 @@ void OS_Suspend(void){
   NVIC_ST_CURRENT_R = 0;
   ContextSwitch();
   EndCritical(sr);
-};
+}
   
 // ******** OS_Fifo_Init ************
 // Initialize the Fifo to be empty

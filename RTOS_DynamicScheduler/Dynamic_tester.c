@@ -175,6 +175,30 @@ int Test3_ThreeThreads_TwoAge_DiffPri() {
   return 0;
 }
 
+
+/***************** Sleep Tests: 2 Threads *******************/
+// Two threads, higher priority sleeps after toggling
+// Lower prority runs for some time until higher priority wakes
+
+void PD1Toggle_sleepy_thread() {
+	while(1) {
+		PF1 ^=0x02;
+		count1++;
+    PF1 ^= 0x02;
+    OS_Sleep(10);
+	}
+}
+
+int Sleep_Test_2Thread_One_Sleep() {
+  OS_Init();
+  NumCreated = 0;
+  PortD_Init();
+  NumCreated += OS_AddThread(&PD1Toggle_sleepy_thread, 128, 0);
+  NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
+  OS_Launch(TIME_2MS);
+  return 0;
+}
+
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
   Test1_Basic_RR_Test();
