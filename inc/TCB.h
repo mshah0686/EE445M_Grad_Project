@@ -17,7 +17,7 @@ typedef struct tcb {
 
 	uint8_t orig_priority;
 	uint8_t aged_priority;
-	uint8_t ticks;
+	uint32_t ticks;
 	
 	/* Adding to sleep list */
 	struct tcb* sleep_next;

@@ -45,10 +45,6 @@
 #include "../RTOS_Labs_common/ST7735.h"
 
 
-//*********Prototype for FFT in cr4_fft_64_stm32.s, STMicroelectronics
-void cr4_fft_64_stm32(void *pssOUT, void *pssIN, unsigned short Nbin);
-//*********Prototype for PID in PID_stm32.s, STMicroelectronics
-short PID_stm32(short Error, short *Coeff);
 
 uint32_t NumCreated;   // number of foreground threads created
 uint32_t IdleCount;    // CPU idle counter
@@ -59,24 +55,8 @@ uint32_t NumSamples;   // incremented every ADC sample, in Producer
 #define RUNLENGTH (20*FS)   // display results and quit when NumSamples==RUNLENGTH
 // 20-sec finite time experiment duration 
 
-#define PERIOD1 TIME_500US   // DAS 2kHz sampling period in system time units
-#define PERIOD2 TIME_1MS     // PID period in system time units
-int32_t x[64],y[64];           // input and output arrays for FFT
-
-// Idle reference count for 10ms of completely idle CPU
-// This should really be calibrated in a 10ms delay loop in OS_Init()
-uint32_t IdleCountRef = 30769;
-uint32_t CPUUtil;       // calculated CPU utilization (in 0.01%)
 
 //---------------------User debugging-----------------------
-uint32_t DataLost;     // data sent by Producer, but not received by Consumer
-extern int32_t MaxJitter;             // largest time jitter between interrupts in usec
-extern uint32_t const JitterSize;
-
-extern int32_t MaxJitter4A;
-extern int32_t MaxJitter2A;
-extern uint32_t JitterHistogram4A[];
-extern uint32_t JitterHistogram2A[];
 
 #define PD0  (*((volatile uint32_t *)0x40007004))
 #define PD1  (*((volatile uint32_t *)0x40007008))
@@ -106,11 +86,15 @@ void Interpreter(void);    // just a prototype, link to your interpreter
 /* BASIC ROUND ROBIN TEST */
 // Two threads of same priority, should toggle PD1 and PD2 and switch between the two
 void PD1Toggle_thread() {
-  PD1 ^=0x02;
+	while(1) {
+		PF1 ^=0x02;
+	}
 }
 
 void PD2Toggle_thread() {
-  PD2 ^= 0x04;
+	while(1) {
+		PF2 ^= 0x04;
+	}
 }
 
 void PD3Toggle_thread() {
@@ -178,5 +162,5 @@ int Test3_ThreeThreads_TwoAge_DiffPri() {
 
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
-  return 0;
+  Test2_TwoThreads_OneAge();
 }

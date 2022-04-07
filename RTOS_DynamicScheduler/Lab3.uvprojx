@@ -10,7 +10,7 @@
       <TargetName>Lab3</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -185,6 +185,7 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>1</RvdsVP>
             <RvdsMve>0</RvdsMve>
+            <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -351,7 +352,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
+            <ClangAsOpt>4</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -423,11 +424,6 @@
               <FilePath>..\inc\ADCT0ATrigger.c</FilePath>
             </File>
             <File>
-              <FileName>LPF.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\inc\LPF.c</FilePath>
-            </File>
-            <File>
               <FileName>WTimer0A.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\inc\WTimer0A.c</FilePath>
@@ -448,11 +444,6 @@
               <FilePath>..\inc\cr4_fft_64_stm32.s</FilePath>
             </File>
             <File>
-              <FileName>PID_stm32.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\inc\PID_stm32.s</FilePath>
-            </File>
-            <File>
               <FileName>osasm.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\RTOS_Labs_common\osasm.s</FilePath>
@@ -468,9 +459,9 @@
               <FilePath>..\inc\IRDistance.c</FilePath>
             </File>
             <File>
-              <FileName>Lab3.c</FileName>
+              <FileName>Dynamic_tester.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Lab3.c</FilePath>
+              <FilePath>.\Dynamic_tester.c</FilePath>
             </File>
             <File>
               <FileName>ADC.c</FileName>

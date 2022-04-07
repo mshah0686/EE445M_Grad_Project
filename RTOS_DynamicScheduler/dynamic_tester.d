@@ -1,0 +1,14 @@
+.\dynamic_tester.o: Dynamic_tester.c
+.\dynamic_tester.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\dynamic_tester.o: ../inc/tm4c123gh6pm.h
+.\dynamic_tester.o: ../inc/CortexM.h
+.\dynamic_tester.o: ../inc/LaunchPad.h
+.\dynamic_tester.o: ../inc/PLL.h
+.\dynamic_tester.o: ../inc/LPF.h
+.\dynamic_tester.o: ../RTOS_Labs_common/UART0int.h
+.\dynamic_tester.o: ../RTOS_Labs_common/ADC.h
+.\dynamic_tester.o: ../inc/ADCT0ATrigger.h
+.\dynamic_tester.o: ../inc/IRDistance.h
+.\dynamic_tester.o: ../RTOS_Labs_common/OS.h
+.\dynamic_tester.o: ../RTOS_Labs_common/Interpreter.h
+.\dynamic_tester.o: ../RTOS_Labs_common/ST7735.h

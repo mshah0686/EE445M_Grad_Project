@@ -115,7 +115,7 @@ PendSV_Handler
     B Done
 Jump
     MOV     R2, #0
-    STR     R2, [R1,#8]
+    STR     R2, [R1,#8]				   ; Clear jump flag
     LDR     R1, [R1,#12]               ; R1 = RunPt->jumpTo
 Done
     STR     R1, [R0]                   ;    RunPt = R1

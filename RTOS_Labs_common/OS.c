@@ -163,8 +163,8 @@ void check_for_rising_priority() {
 /* Takes a thread and moves it in the RunPtrs based on aged_priority */
 /* Will add at tail of list and update RunPtrs as necessary*/
 void update_thread_priority(tcb* thread) {
-  remove_running_thread(&thread);
-  add_running_thread(&thread);
+  remove_running_thread(thread);
+  add_running_thread(thread);
 }
 
 /* Goes through running ptrs and finds next thread to run in highes priority */
@@ -173,7 +173,7 @@ tcb* find_next_best_thread_run(void) {
     if(RunningPtrs[i] != NULL) {
       return RunningPtrs[i];
     }
-  }
+  } return NULL;
 }
 
 /*------------------------------------------------------------------------------
@@ -188,26 +188,32 @@ void SysTick_Handler(void) {
 
   /* Update ticks and age certain threads */
   /* for heads in run pointer with priority lower than current */
-  for(int i = current_thread_ptr->aged_priority; i < 6; i++) {
-    /* run ptrs-> head.ticks ++ */
-    RunningPtrs[i]->ticks++;
-    /* If ticks are at 10 -> need to age */
-    if(RunningPtrs[i]->ticks == 10) {
-      /* ticks = 0 */
-      RunningPtrs[i]->ticks = 0;
-      /* aged priority -- */
-      RunningPtrs[i]->aged_priority--;
-      /* update_thread_priority(tcb*) */
-      update_thread_priority(&RunningPtrs[i]);
-    }
+  for(int i = current_thread_ptr->aged_priority +1; i < 6; i++) {
+    if(RunningPtrs[i] != NULL) {
+			/* run ptrs-> head.ticks ++ */
+			RunningPtrs[i]->ticks++;
+			/* If ticks are at 10 -> need to age */
+			if(RunningPtrs[i]->ticks == TICK_COUNT) {
+				/* ticks = 0 */
+				RunningPtrs[i]->ticks = 0;
+				
+				/* Age thread and update in list */
+				tcb* thread_to_age = RunningPtrs[i];
+				remove_running_thread(thread_to_age);
+				thread_to_age->aged_priority--;
+				add_running_thread(thread_to_age);
+			}
+		}
   }
 
   /* De-age the current_thread if needed */
   if(current_thread_ptr-> aged_priority != current_thread_ptr->orig_priority) {
     /* current_thread -> aged_priroity = orig_priority*/
-    current_thread_ptr->aged_priority = current_thread_ptr->orig_priority;
-    /* update_thread_priority(tcb *) */
-    update_thread_priority(current_thread_ptr);
+		tcb* thread_to_age = current_thread_ptr;
+		remove_running_thread(thread_to_age);
+		thread_to_age->aged_priority = thread_to_age->orig_priority;
+		add_running_thread(thread_to_age);
+		
     /* if priority update happened -> find next best thread to run */
     tcb* next_to_run = find_next_best_thread_run();
     /* Set next best_thread ticks to 0 */

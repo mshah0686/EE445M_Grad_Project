@@ -223,7 +223,7 @@ ARM Macro Assembler    Page 4
   115 00000056 E003            B                Done
   116 00000058         Jump
   117 00000058 F04F 0200       MOV              R2, #0
-  118 0000005C 608A            STR              R2, [R1,#8]
+  118 0000005C 608A            STR              R2, [R1,#8] ; Clear jump flag
   119 0000005E 68C9            LDR              R1, [R1,#12] ; R1 = RunPt->jump
                                                             To
   120 00000060         Done
@@ -285,11 +285,12 @@ ARM Macro Assembler    Page 5
               00000000 
               E000ED04 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4 --apcs=interw
-ork --depend=.\osasm.d -o.\osasm.o -I.\RTE\_Lab3 -IC:\Keil_v5\ARM\PACK\ARM\CMSI
-S\5.4.0\CMSIS\Core\Include -IC:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Inc
-lude\TM4C123 --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --pred
-efine="__UVISION_VERSION SETA 526" --predefine="_RTE_ SETA 1" --predefine="TM4C
-123GH6PM SETA 1" --list=.\osasm.lst ..\RTOS_Labs_common\osasm.s
+ork --depend=.\osasm.d -o.\osasm.o -I.\RTE\_Lab3 -IC:\Users\Malav\AppData\Local
+\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include -IC:\Users\Malav\AppData\Local\Ar
+m\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --predefine="__EVAL SETA 1" 
+--predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 536" --pred
+efine="_RTE_ SETA 1" --predefine="TM4C123GH6PM SETA 1" --predefine="_RTE_ SETA 
+1" --list=.\osasm.lst ..\RTOS_Labs_common\osasm.s
 
 
 

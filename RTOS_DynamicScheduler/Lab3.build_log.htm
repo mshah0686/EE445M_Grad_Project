@@ -3,49 +3,131 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Tool Versions:</h2>
-IDE-Version: µVision V5.26.2.0
-Copyright (C) 2018 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: Willliam Avery, University of Texas, LIC=----
+IDE-Version: µVision V5.36.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Malav Shah, UT Austin, LIC=----
  
 Tool Versions:
-Toolchain:       MDK-Lite  Version: 5.26.2.0
+Toolchain:       MDK-Lite  Version: 5.36.0.0
 Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
-C Compiler:      Armcc.exe V5.06 update 6 (build 750)
-Assembler:       Armasm.exe V5.06 update 6 (build 750)
-Linker/Locator:  ArmLink.exe V5.06 update 6 (build 750)
-Library Manager: ArmAr.exe V5.06 update 6 (build 750)
-Hex Converter:   FromElf.exe V5.06 update 6 (build 750)
-CPU DLL:         SARMCM3.DLL V5.26.2.0
-Dialog DLL:      DCM.DLL V1.17.2.0
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.36.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
 Target DLL:      lmidk-agdi.dll V???
-Dialog DLL:      TCM.DLL V1.36.1.0
+Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
-C:\Users\William\Desktop\EE445M Labs\lab-3-waa493_mhs2466\RTOS_Lab3_RTOSpriority\Lab3.uvprojx
-Project File Date:  03/07/2022
+C:\Keil_v5\ValvanoWareTM4C\EE445M_Grad_Project\RTOS_DynamicScheduler\Lab3.uvprojx
+Project File Date:  04/06/2022
 
 <h2>Output:</h2>
-*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Lab3'
-compiling Lab3.c...
-../RTOS_Labs_common/OS.h(299): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
+compiling Interpreter.c...
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(303): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
   long get_int_percentage_time ();
-../RTOS_Labs_common/OS.h(300): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(304): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
   void get_int_disable_time ();
-../RTOS_Labs_common/OS.h(333): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(337): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
    uint32_t OS_NumThreads_Created();
-Lab3.c: 3 warnings, 0 errors
+..\RTOS_Labs_common\Interpreter.c: 3 warnings, 0 errors
+compiling efile.c...
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(303): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
+  long get_int_percentage_time ();
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(304): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
+  void get_int_disable_time ();
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(337): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
+   uint32_t OS_NumThreads_Created();
+..\RTOS_Labs_common\efile.c: 3 warnings, 0 errors
+compiling OS.c...
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(303): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
+  long get_int_percentage_time ();
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(304): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
+  void get_int_disable_time ();
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(337): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
+   uint32_t OS_NumThreads_Created();
+..\RTOS_Labs_common\../inc/TCB.h(40): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\RTOS_Labs_common\OS.c(90): warning:  #1295-D: Deprecated declaration StartOS - give arg types
+  void StartOS();             /* defined in osasm.s */
+..\RTOS_Labs_common\OS.c(91): warning:  #1295-D: Deprecated declaration ContextSwitch - give arg types
+  void ContextSwitch();       /* defined in osasm.s */
+..\RTOS_Labs_common\OS.c(92): warning:  #1295-D: Deprecated declaration DisableInterrupts - give arg types
+  void DisableInterrupts();   /* defined in startup.s */
+..\RTOS_Labs_common\OS.c(93): warning:  #1295-D: Deprecated declaration EnableInterrupts - give arg types
+  void EnableInterrupts();    /* defined in startup.s */
+..\RTOS_Labs_common\OS.c(97): warning:  #1295-D: Deprecated declaration OS_CountMsTime_Timer5_UserTask - give arg types
+  void OS_CountMsTime_Timer5_UserTask(); /*Task for Timer 5 /MS Timer */
+..\RTOS_Labs_common\OS.c(98): warning:  #1295-D: Deprecated declaration OS_Time_Init - give arg types
+  void OS_Time_Init();
+..\RTOS_Labs_common\OS.c(99): warning:  #1295-D: Deprecated declaration OS_Increment_Time - give arg types
+  void OS_Increment_Time();
+..\RTOS_Labs_common\OS.c(992): warning:  #1-D: last line of file ends without a newline
+  }
+..\RTOS_Labs_common\OS.c: 12 warnings, 0 errors
+compiling ST7735.c...
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(303): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
+  long get_int_percentage_time ();
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(304): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
+  void get_int_disable_time ();
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(337): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
+   uint32_t OS_NumThreads_Created();
+..\RTOS_Labs_common\ST7735.c: 3 warnings, 0 errors
+compiling TCB.c...
+..\inc\../inc/TCB.h(40): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\inc\TCB.c(44): warning:  #1-D: last line of file ends without a newline
+  }
+..\inc\TCB.c(44): warning:  #940-D: missing return statement at end of non-void function "tcb_mem_free_tcb" 
+  }
+..\inc\TCB.c: 3 warnings, 0 errors
+compiling UART0int.c...
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(303): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
+  long get_int_percentage_time ();
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(304): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
+  void get_int_disable_time ();
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(337): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
+   uint32_t OS_NumThreads_Created();
+..\RTOS_Labs_common\UART0int.c: 3 warnings, 0 errors
+compiling Dynamic_tester.c...
+../RTOS_Labs_common/OS.h(303): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
+  long get_int_percentage_time ();
+../RTOS_Labs_common/OS.h(304): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
+  void get_int_disable_time ();
+../RTOS_Labs_common/OS.h(337): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
+   uint32_t OS_NumThreads_Created();
+Dynamic_tester.c: 3 warnings, 0 errors
+compiling Timer4A.c...
+..\inc\../RTOS_Labs_common/OS.h(303): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
+  long get_int_percentage_time ();
+..\inc\../RTOS_Labs_common/OS.h(304): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
+  void get_int_disable_time ();
+..\inc\../RTOS_Labs_common/OS.h(337): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
+   uint32_t OS_NumThreads_Created();
+..\inc\Timer4A.c: 3 warnings, 0 errors
+compiling Timer2A.c...
+..\inc\../RTOS_Labs_common/OS.h(303): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
+  long get_int_percentage_time ();
+..\inc\../RTOS_Labs_common/OS.h(304): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
+  void get_int_disable_time ();
+..\inc\../RTOS_Labs_common/OS.h(337): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
+   uint32_t OS_NumThreads_Created();
+..\inc\Timer2A.c: 3 warnings, 0 errors
 linking...
-Program Size: Code=14924 RO-data=2808 RW-data=560 ZI-data=10632  
-".\Lab3.axf" - 0 Error(s), 3 Warning(s).
+Program Size: Code=5588 RO-data=2152 RW-data=200 ZI-data=9688  
+".\Lab3.axf" - 0 Error(s), 36 Warning(s).
 
 <h2>Software Packages used:</h2>
 
 Package Vendor: ARM
-                http://www.keil.com/pack/ARM.CMSIS.5.4.0.pack
-                ARM.CMSIS.5.4.0
-                CMSIS (Cortex Microcontroller Software Interface Standard)
-   * Component: CORE Version: 5.1.2
+                http://www.keil.com/pack/ARM.CMSIS.5.8.0.pack
+                ARM.CMSIS.5.8.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.5.0
 
 Package Vendor: Keil
                 http://www.keil.com/pack/Keil.TM4C_DFP.1.1.0.pack
@@ -54,13 +136,13 @@ Package Vendor: Keil
 
 <h2>Collection of Component include folders:</h2>
   .\RTE\_Lab3
-  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include
-  C:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123
+  C:\Users\Malav\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include
+  C:\Users\Malav\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123
 
 <h2>Collection of Component Files used:</h2>
 
-   * Component: ARM::CMSIS:CORE:5.1.2
-Build Time Elapsed:  00:00:01
+   * Component: ARM::CMSIS:CORE:5.5.0
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>
