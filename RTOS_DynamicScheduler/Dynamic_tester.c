@@ -227,11 +227,11 @@ int Test4_ManyThreads_DiffPri() {
 }
 
 
-/***************** Sleep Tests: 2 Threads *******************/
+/***************** Sleep Tests 1: 2 Threads *******************/
 // Two threads, higher priority sleeps after toggling
 // Lower prority runs for some time until higher priority wakes
 
-void PD1Toggle_sleepy_thread() {
+void PF1Toggle_sleepy_thread() {
 	while(1) {
 		PF1 ^=0x02;
 		count1++;
@@ -244,11 +244,33 @@ int Sleep_Test_2Thread_One_Sleep() {
   OS_Init();
   NumCreated = 0;
   PortD_Init();
-  NumCreated += OS_AddThread(&PD1Toggle_sleepy_thread, 128, 0);
+  NumCreated += OS_AddThread(&PF1Toggle_sleepy_thread, 128, 0);
   NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
   OS_Launch(TIME_2MS);
   return 0;
 }
+
+/***************** Sleep Tests 2: 3 Threads *******************/
+void PF2Toggle_sleepy_thread() {
+  while(1) {
+    PF2 ^= 0x04;
+    OS_Sleep(10);
+  }
+}
+
+// PF3 thread should never age -> should run when other two threads asleep
+int Sleep_Test2_3Thread_Two_Sleep() {
+  OS_Init();
+  NumCreated = 0;
+  PortD_Init();
+  NumCreated += OS_AddThread(&PF1Toggle_sleepy_thread, 128, 0);
+  NumCreated += OS_AddThread(&PF2Toggle_sleepy_thread, 128, 1);
+  NumCreated += OS_AddThread(&PF3Toggle_thread, 128, 2);
+  OS_Launch(TIME_2MS);
+  return 0;
+}
+
+
 
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
