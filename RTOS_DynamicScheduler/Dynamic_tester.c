@@ -118,7 +118,7 @@ void PD3Toggle_thread() {
 
 void PF0Toggle_thread() {
 	while(1) {
-		PF0 ^=0x01;
+		PF0 ^= 0x01;
 		count1++;
 	}
 }
@@ -215,12 +215,12 @@ int Test4_ManyThreads_DiffPri() {
 
   NumCreated += OS_AddThread(&PD0Toggle_thread, 128, 0);
   NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 1);
-  NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
-  NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 2);
-  NumCreated += OS_AddThread(&PF0Toggle_thread, 128, 2);
-  NumCreated += OS_AddThread(&PF1Toggle_thread, 128, 3);
-  NumCreated += OS_AddThread(&PF2Toggle_thread, 128, 3);
-  NumCreated += OS_AddThread(&PF3Toggle_thread, 128, 4);
+  NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 2);
+  NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 3);
+  //NumCreated += OS_AddThread(&PF0Toggle_thread, 128, 0);
+  NumCreated += OS_AddThread(&PF1Toggle_thread, 128, 4);
+  NumCreated += OS_AddThread(&PF2Toggle_thread, 128, 5);
+  //NumCreated += OS_AddThread(&PF3Toggle_thread, 128, 4);
 
   OS_Launch(TIME_2MS);
   return 0;
@@ -271,8 +271,24 @@ int Sleep_Test2_3Thread_Two_Sleep() {
 }
 
 
+/******************** Kill Test: 1 High dies **********/
+void PF0_Suicide_Thread() {
+	PF0 = 0x01;
+	OS_Kill();
+}
+
+int Kill_Test_1Dies() {
+  OS_Init();
+  NumCreated = 0;
+  PortD_Init();
+  NumCreated += OS_AddThread(&PF0_Suicide_Thread, 128, 0);
+  NumCreated += OS_AddThread(&PF2Toggle_thread, 128, 1);
+  OS_Launch(TIME_2MS);
+  return 0;
+}
+
 
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
-  Sleep_Test2_3Thread_Two_Sleep();
+  Test4_ManyThreads_DiffPri();
 }

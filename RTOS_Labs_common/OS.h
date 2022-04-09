@@ -27,7 +27,7 @@
 #define TIME_250US  (TIME_1MS/5)
 
 #define TOTAL_PRIORITIES 6
-#define TICK_COUNT 3
+#define TICK_COUNT 5
 
 #define JITTERSIZE 64
 

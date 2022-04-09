@@ -197,7 +197,7 @@ void SysTick_Handler(void) {
 			/* run ptrs-> head.ticks ++ */
 			RunningPtrs[i]->ticks++;
 			/* If ticks are at 10 -> need to age */
-			if(RunningPtrs[i]->ticks == TICK_COUNT) {
+			if(RunningPtrs[i]->ticks == TICK_COUNT* RunningPtrs[i]->aged_priority) {
 				/* ticks = 0 */
 				RunningPtrs[i]->ticks = 0;
 				
@@ -703,7 +703,12 @@ void OS_Kill(void){
 	tcb_mem_free_tcb(current_thread_ptr);
 	
 	/* Context switch to next thread */
-  check_for_falling_priority();
+  struct tcb* next = find_next_best_thread_run();
+	current_thread_ptr->jumpFlag = 1;
+	current_thread_ptr->jumpTo = next;
+	
+	current_thread_ptr->ticks = 0;
+
 	OS_Suspend();
  
 	/* End atomic section */
