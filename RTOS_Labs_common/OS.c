@@ -881,7 +881,7 @@ void OS_CountMsTime_Timer5_UserTask() {
 	
 	/* Check sleeping thread at head to wake if done */
 	if(sleep_list_head) sleep_list_head->sleep_count--;
-	struct tcb* temp;
+	struct tcb* temp = NULL;
 	
 	/* If head is done -> add to global list*/
 	while(sleep_list_head && sleep_list_head->sleep_count ==0) {
@@ -899,7 +899,7 @@ void OS_CountMsTime_Timer5_UserTask() {
 	}
 
   /* Set special flag for next systick handler to check for higher priority thread */
-  if(temp->orig_priority < current_thread_ptr->aged_priority) {
+  if(temp && temp->orig_priority < current_thread_ptr->aged_priority) {
     higher_pri_thread_added_flag = 1;
   }
 	EnableInterrupts();

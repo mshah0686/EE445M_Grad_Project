@@ -274,5 +274,5 @@ int Sleep_Test2_3Thread_Two_Sleep() {
 
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
-  Test1_Basic_RR_Test();
+  Sleep_Test2_3Thread_Two_Sleep();
 }
