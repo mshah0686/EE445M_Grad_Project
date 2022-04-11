@@ -287,10 +287,10 @@ ARM Macro Assembler    Page 5
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4 --apcs=interw
 ork --depend=.\osasm.d -o.\osasm.o -I.\RTE\_Lab3 -IC:\Users\Malav\AppData\Local
 \Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include -IC:\Users\Malav\AppData\Local\Ar
-m\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --predefine="__EVAL SETA 1" 
---predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 536" --pred
-efine="_RTE_ SETA 1" --predefine="TM4C123GH6PM SETA 1" --predefine="_RTE_ SETA 
-1" --list=.\osasm.lst ..\RTOS_Labs_common\osasm.s
+m\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --predefine="__MICROLIB SETA
+ 1" --predefine="__UVISION_VERSION SETA 536" --predefine="_RTE_ SETA 1" --prede
+fine="TM4C123GH6PM SETA 1" --predefine="_RTE_ SETA 1" --list=.\osasm.lst ..\RTO
+S_Labs_common\osasm.s
 
 
 
@@ -479,4 +479,4 @@ Symbol: current_thread_ptr
       At line 108 in file ..\RTOS_Labs_common\osasm.s
 
 6 symbols
-357 symbols in table
+356 symbols in table

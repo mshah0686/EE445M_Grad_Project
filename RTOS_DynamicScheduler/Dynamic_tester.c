@@ -169,8 +169,8 @@ int Test2_TwoThreads_OneAge() {
 	count3 = 0;
 	error = 0;
   PortD_Init();
-  NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 0);
-  NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
+  NumCreated += OS_AddThread(&PF1Toggle_thread, 128, 0);
+  NumCreated += OS_AddThread(&PF2Toggle_thread, 128, 1);
 
   OS_Launch(TIME_2MS);
   return 0;
@@ -272,23 +272,70 @@ int Sleep_Test2_3Thread_Two_Sleep() {
 
 
 /******************** Kill Test: 1 High dies **********/
-void PF0_Suicide_Thread() {
-	PF0 = 0x01;
+void PF2_Suicide_Thread() {
+	PF2 ^= 0x04;
+	PF2 ^= 0x04;
 	OS_Kill();
+}
+
+void PF0_Suicide_Sponser() {
+	while(1) {
+		PF1 ^= 0x02;
+		OS_AddThread(&PF2_Suicide_Thread, 128, 0);
+	}
+	
 }
 
 int Kill_Test_1Dies() {
   OS_Init();
   NumCreated = 0;
-  PortD_Init();
-  NumCreated += OS_AddThread(&PF0_Suicide_Thread, 128, 0);
-  NumCreated += OS_AddThread(&PF2Toggle_thread, 128, 1);
+  NumCreated += OS_AddThread(&PF0_Suicide_Sponser, 128, 1);
   OS_Launch(TIME_2MS);
   return 0;
 }
 
 
+/******************** Semaphore Test: 1 Simple **********/
+Sema4Type simple_sema;
+
+void sema_thread1() {
+	OS_Wait(&simple_sema);
+	PF2 = 0x04;
+	OS_Signal(&simple_sema);
+	OS_Kill();
+}
+
+void sema_thread2() {
+	OS_Wait(&simple_sema);
+	PF1 = 0x02;
+	OS_Signal(&simple_sema);
+	OS_Kill();
+}
+
+void sema_thread3() {
+	OS_Wait(&simple_sema);
+	PF3 = 0x08;
+	OS_Signal(&simple_sema);
+	OS_Kill();
+}
+
+void idle() {
+	while(1);
+}
+
+void sema_test1_all_capture() {
+	OS_Init();
+	OS_InitSemaphore(&simple_sema, 1);
+  NumCreated = 0;
+  NumCreated += OS_AddThread(&sema_thread3, 128, 1);
+  NumCreated += OS_AddThread(&sema_thread2, 128, 1);
+	NumCreated += OS_AddThread(&sema_thread1, 128, 1);
+	NumCreated += OS_AddThread(&idle, 128, 4);
+	OS_Launch(TIME_2MS);
+}
+
+
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
-  Test4_ManyThreads_DiffPri();
+  sema_test1_all_capture();
 }

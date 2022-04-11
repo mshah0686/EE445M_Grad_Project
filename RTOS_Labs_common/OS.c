@@ -229,6 +229,7 @@ void SysTick_Handler(void) {
   } else if(higher_pri_thread_added_flag ==1) {
     /* Clear flag */
     higher_pri_thread_added_flag = 0;
+		
     /* find next best to run */
     tcb* next_to_run = find_next_best_thread_run();
     current_thread_ptr->jumpFlag = 1;
@@ -332,9 +333,29 @@ void OS_Wait(Sema4Type *semaPt){
       current_thread_ptr->sema_next = current;
       previous->sema_next = current_thread_ptr;
     }
-		/* Context switch */
-    //check_for_falling_priority();
+
+		/* Check for any priority ceiling/inversion protocols */
+		/* Check the aged priority of current holding thread */
+		if(semaPt->current_holding_thread->aged_priority > current_thread_ptr->aged_priority) {
+			/* Need to priority match the current holding thread */
+			remove_running_thread(semaPt->current_holding_thread);
+			
+			/* Update priority */
+			semaPt->current_holding_thread->aged_priority = current_thread_ptr->aged_priority;
+			
+			/* Add properly to the list */
+			add_running_thread(semaPt->current_holding_thread);
+		}
+		
+		/* Context switch to next best thread*/
+    tcb* next = find_next_best_thread_run();
+		current_thread_ptr->jumpFlag = 1;
+		current_thread_ptr->jumpTo = next;
+		
 		OS_Suspend();
+	} else {
+		/* Update current_thread_ptr */
+		semaPt->current_holding_thread = current_thread_ptr;
 	}
   EnableInterrupts();
 }; 
@@ -353,9 +374,24 @@ void OS_Signal(Sema4Type *semaPt){
 	if(semaPt->Value <= 0) {
 		/* Add to current running list */
 		add_running_thread(semaPt->head);
-    check_for_rising_priority();
+    
+		/* Update current holding thread */
+		semaPt->current_holding_thread = semaPt->head;
+		
 		/* Remove from semaphore list */
 		semaPt->head = semaPt->head->sema_next;
+		
+		/* find next thread to run */
+		tcb* next = find_next_best_thread_run();
+		
+		/* Context swtich if new thread of higher priority */
+		if(current_thread_ptr->aged_priority > next->aged_priority) {
+			current_thread_ptr->jumpFlag = 1;
+			current_thread_ptr->jumpTo = next;
+			OS_Suspend();
+		}
+	} else {
+		semaPt->current_holding_thread = NULL;
 	}
   EndCritical(sr);
 }; 
@@ -478,7 +514,12 @@ int OS_AddThread(void(*task)(void), uint32_t stackSize, uint32_t priority){
 	NumThreadsCreated++;
   
   /* End atomic section */
-  check_for_rising_priority();
+  tcb* next = find_next_best_thread_run();
+	if(current_thread_ptr && next != current_thread_ptr) {
+		current_thread_ptr->jumpFlag = 1;
+		current_thread_ptr->jumpTo = next;
+		OS_Suspend();
+	}
   EndCritical(sr);
   
   return 1;

@@ -646,16 +646,15 @@ Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4 --apcs=interw
 ork --depend=.\cr4_fft_64_stm32.d -o.\cr4_fft_64_stm32.o -I.\RTE\_Lab3 -IC:\Use
 rs\Malav\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include -IC:\Users\
 Malav\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123 --pred
-efine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VE
-RSION SETA 536" --predefine="_RTE_ SETA 1" --predefine="TM4C123GH6PM SETA 1" --
+efine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 536" --predefine=
+"_RTE_ SETA 1" --predefine="TM4C123GH6PM SETA 1" --predefine="_RTE_ SETA 1" --l
 
 
 
 ARM Macro Assembler    Page 11 
 
 
-predefine="_RTE_ SETA 1" --list=.\cr4_fft_64_stm32.lst ..\inc\cr4_fft_64_stm32.
-s
+ist=.\cr4_fft_64_stm32.lst ..\inc\cr4_fft_64_stm32.s
 
 
 
@@ -731,13 +730,13 @@ Symbol: NPT
    Definitions
       At line 46 in file ..\inc\cr4_fft_64_stm32.s
    Uses
-      At line 135 in macro °ÙÑÐÙÑðÙÑÚÑ
+      At line 135 in macro ppÎ`«ÏOPT
       at line 223 in file ..\inc\cr4_fft_64_stm32.s
-      At line 137 in macro °ÙÑÐÙÑðÙÑÚÑ
+      At line 137 in macro ppÎ`«ÏOPT
       at line 223 in file ..\inc\cr4_fft_64_stm32.s
-      At line 139 in macro °ÙÑÐÙÑðÙÑÚÑ
+      At line 139 in macro ppÎ`«ÏOPT
       at line 223 in file ..\inc\cr4_fft_64_stm32.s
-      At line 141 in macro °ÙÑÐÙÑðÙÑÚÑ
+      At line 141 in macro ppÎ`«ÏOPT
       at line 223 in file ..\inc\cr4_fft_64_stm32.s
 
 1 symbol
@@ -756,4 +755,4 @@ Symbol: TableFFT
       None
 Comment: TableFFT unused
 1 symbol
-363 symbols in table
+362 symbols in table
