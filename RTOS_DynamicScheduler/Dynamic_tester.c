@@ -366,7 +366,53 @@ void sema_test1_all_capture() {
 	OS_Init();
 	OS_InitSemaphore(&pmp_test_sema, 1);
   NumCreated = 0;
-  NumCreated += OS_AddThread(&higher_stalled_thread, 128, 4);
+  NumCreated += OS_AddThread(&lower_blocking_thread, 128, 4);
+	OS_Launch(TIME_2MS);
+}
+
+/******* SEMA TEST PMP Multiple Threads ************/
+// High priority threads run
+// Low priroity grabs semaphore, spawns middle thread
+// Low priroity should be aged to match middle, then also keep again until it reaches high thread
+// Should not deage until semaphore released 
+
+// TODO: Low priority ages to high then should fall back to middle in pre-emption
+
+void high_thread_toggling() {
+  /* Just toggles LED at high priority */
+  while(1) {
+      PF1 ^= 0x02;
+  }
+}
+
+void middle_thread_blocked() {
+  /* Blocked on semaphore from lower thread */
+  PF3 ^= 0x08;
+  OS_Wait(&pmp_test_sema);    // SHOULD BLOCK and raise other thread
+  PF3 ^= 0x08;
+  OS_Signal(&pmp_test_sema);
+  OS_Kill();
+}
+
+void lower_thread_with_semaphore() {
+  /* Should work really slowly, then get aged to middle thread priority */
+  while(1) {
+    OS_Wait(&pmp_test_sema);
+    PF2 ^= 0x04;
+    OS_AddThread(&higher_stalled_thread, 128, 3);
+    PF2 ^= 0x04;
+    OS_Signal(&pmp_test_sema);
+    PF2 ^= 0x04;
+  }
+  /* Should not deage until OS_Signal */
+}
+
+void sema_test1_all_capture() {
+	OS_Init();
+	OS_InitSemaphore(&pmp_test_sema, 1);
+  NumCreated = 0;
+  NumCreated += OS_AddThread(&high_thread_toggling, 128, 0);
+  NumCreated += OS_AddThread(&lower_thread_with_semaphore, 128, 4);
 	OS_Launch(TIME_2MS);
 }
 

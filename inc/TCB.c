@@ -9,8 +9,6 @@ uint32_t tcb_memory_management;
 int32_t stack_memory[TOTAL_TCB][STACK_SIZE_PER_THREAD];
 
 
-
-
 void tcb_mem_init() {
 	tcb_memory_management = 0;
 }
