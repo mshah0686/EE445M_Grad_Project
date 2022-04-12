@@ -335,6 +335,41 @@ void sema_test1_all_capture() {
 }
 
 
+/******* SEMA TEST PMP ************/
+// One thread started at low priority
+// Thread captures semaphore
+// Creates a higher level thread
+// Higher level blocked on the semaphore
+// Lower lever should be aged to match the higher level
+// Then run till released and deaged, 
+Sema4Type pmp_test_sema;
+
+void higher_stalled_thread() {
+  PF3 ^= 0x08;
+  OS_Wait(&pmp_test_sema);    // SHOULD BLOCK and raise other thread
+  PF3 ^= 0x08;
+  OS_Signal(&pmp_test_sema);
+  OS_Kill();
+}
+
+void lower_blocking_thread() {
+  OS_Wait(&pmp_test_sema);
+  PF2 ^= 0x04;
+  OS_AddThread(&higher_stalled_thread, 128, 0);
+  PF2 ^= 0x04;
+  OS_Signal(&pmp_test_sema);
+  PF2 ^= 0x04;
+  OS_Kill();
+}
+
+void sema_test1_all_capture() {
+	OS_Init();
+	OS_InitSemaphore(&pmp_test_sema, 1);
+  NumCreated = 0;
+  NumCreated += OS_AddThread(&higher_stalled_thread, 128, 4);
+	OS_Launch(TIME_2MS);
+}
+
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
   sema_test1_all_capture();

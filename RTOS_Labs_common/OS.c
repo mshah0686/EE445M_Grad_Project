@@ -211,7 +211,8 @@ void SysTick_Handler(void) {
   }
 
   /* De-age the current_thread if needed */
-  if(current_thread_ptr-> aged_priority != current_thread_ptr->orig_priority) {
+  if(current_thread_ptr-> aged_priority != current_thread_ptr->orig_priority 
+      && current_thread_ptr->pmp_flag == 0) {
     /* current_thread -> aged_priroity = orig_priority*/
 		tcb* thread_to_age = current_thread_ptr;
 		remove_running_thread(thread_to_age);
@@ -345,6 +346,9 @@ void OS_Wait(Sema4Type *semaPt){
 			
 			/* Add properly to the list */
 			add_running_thread(semaPt->current_holding_thread);
+
+      /* set flag so it does not get deaged in premption */
+      semaPt->current_holding_thread->pmp_flag = 1;
 		}
 		
 		/* Context switch to next best thread*/
@@ -370,6 +374,10 @@ void OS_Signal(Sema4Type *semaPt){
   long sr = StartCritical();
 	/* Increment value */
   semaPt->Value++;
+
+  /* Set signal for PMP */
+  current_thread_ptr->pmp_flag = 0;
+  
 	/* There is someone blocked on this pointer */
 	if(semaPt->Value <= 0) {
 		/* Add to current running list */

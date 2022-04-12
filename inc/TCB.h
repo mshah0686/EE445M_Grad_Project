@@ -25,6 +25,7 @@ typedef struct tcb {
 	
 	/* Semaphore indexing */
 	struct tcb* sema_next;
+	uint8_t pmp_flag;
 	
 	/* Thread specific data */
 	unsigned int thread_id: 10;
