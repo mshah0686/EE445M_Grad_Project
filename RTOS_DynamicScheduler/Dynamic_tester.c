@@ -185,9 +185,9 @@ int Test3_ThreeThreads_TwoAge() {
   OS_Init();
   NumCreated = 0;
   PortD_Init();
-  NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 0);
-  NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
-  NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 1);
+  NumCreated += OS_AddThread(&PF1Toggle_thread, 128, 0);
+  NumCreated += OS_AddThread(&PF2Toggle_thread, 128, 1);
+  NumCreated += OS_AddThread(&PF3Toggle_thread, 128, 1);
   OS_Launch(TIME_2MS*5);
   return 0;
 }
@@ -200,9 +200,9 @@ int Test3_ThreeThreads_TwoAge_DiffPri() {
   OS_Init();
   NumCreated = 0;
   PortD_Init();
-  NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 0);
-  NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 1);
-  NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 5);
+  NumCreated += OS_AddThread(&PF1Toggle_thread, 128, 0);
+  NumCreated += OS_AddThread(&PF2Toggle_thread, 128, 1);
+  NumCreated += OS_AddThread(&PF3Toggle_thread, 128, 5);
   OS_Launch(TIME_2MS);
   return 0;
 }
@@ -254,6 +254,7 @@ int Sleep_Test_2Thread_One_Sleep() {
 void PF2Toggle_sleepy_thread() {
   while(1) {
     PF2 ^= 0x04;
+		PF2 ^= 0x04;
     OS_Sleep(10);
   }
 }
@@ -396,14 +397,15 @@ void middle_thread_blocked() {
 
 void lower_thread_with_semaphore() {
   /* Should work really slowly, then get aged to middle thread priority */
-  while(1) {
+  //while(1) {
     OS_Wait(&pmp_test_sema);
     PF2 ^= 0x04;
-    OS_AddThread(&higher_stalled_thread, 128, 3);
+    OS_AddThread(&middle_thread_blocked, 128, 3);
     PF2 ^= 0x04;
     OS_Signal(&pmp_test_sema);
     PF2 ^= 0x04;
-  }
+		OS_Kill();
+  //}
   /* Should not deage until OS_Signal */
 }
 
@@ -418,5 +420,5 @@ void sema_test3_all_capture() {
 
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
-  sema_test2_all_capture();
+  sema_test3_all_capture();
 }

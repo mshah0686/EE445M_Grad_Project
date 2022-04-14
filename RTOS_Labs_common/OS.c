@@ -101,6 +101,8 @@ void OS_CountMsTime_Timer5_UserTask(); /*Task for Timer 5 /MS Timer */
 void OS_Time_Init();
 void OS_Increment_Time();
 
+
+
 /* Function to add tcb to global running linked list */
 void add_running_thread(struct tcb* to_add) {
   uint32_t priority = to_add->aged_priority;
@@ -178,6 +180,13 @@ tcb* find_next_best_thread_run(void) {
       return RunningPtrs[i];
     }
   } return NULL;
+}
+
+void deage_thread(tcb* to_deage) {
+	remove_running_thread(to_deage);
+	to_deage->aged_priority = to_deage->orig_priority;
+	to_deage->ticks = 0;
+	add_running_thread(to_deage);
 }
 
 /*------------------------------------------------------------------------------
@@ -343,6 +352,7 @@ void OS_Wait(Sema4Type *semaPt){
 			
 			/* Update priority */
 			semaPt->current_holding_thread->aged_priority = current_thread_ptr->aged_priority;
+			semaPt->current_holding_thread->ticks = 0;
 			
 			/* Add properly to the list */
 			add_running_thread(semaPt->current_holding_thread);
@@ -356,7 +366,7 @@ void OS_Wait(Sema4Type *semaPt){
 		current_thread_ptr->jumpFlag = 1;
 		current_thread_ptr->jumpTo = next;
 		
-		OS_Suspend();
+		ContextSwitch();
 	} else {
 		/* Update current_thread_ptr */
 		semaPt->current_holding_thread = current_thread_ptr;
@@ -392,25 +402,19 @@ void OS_Signal(Sema4Type *semaPt){
       /* set pmp_flag to 0 */
       current_thread_ptr->pmp_flag = 0;
       
-      /* remove and then add thread to running list properly */
-      remove_running_thread(current_thread_ptr);
-      current_thread_ptr->aged_priority = current_thread_ptr->orig_priority;
-      add_running_thread(current_thread_ptr);
+      /* deage the thread */
+			deage_thread(current_thread_ptr);
+			
+			tcb* next = find_next_best_thread_run();
+			
+			current_thread_ptr->jumpFlag = 1;
+			current_thread_ptr->jumpTo = next;
+			ContextSwitch();
       
     } else if (current_thread_ptr->pmp_flag > 1) {
       /* Set pmp flag properly */
       current_thread_ptr->pmp_flag--;
     }
-
-		/* find next thread to run */
-		tcb* next = find_next_best_thread_run();
-		
-		/* Context swtich if new thread of higher priority */
-		if(current_thread_ptr->aged_priority > next->aged_priority) {
-			current_thread_ptr->jumpFlag = 1;
-			current_thread_ptr->jumpTo = next;
-			OS_Suspend();
-		}
 	} else {
 		semaPt->current_holding_thread = NULL;
 	}
@@ -536,10 +540,16 @@ int OS_AddThread(void(*task)(void), uint32_t stackSize, uint32_t priority){
   
   /* End atomic section */
   tcb* next = find_next_best_thread_run();
-	if(current_thread_ptr && next != current_thread_ptr) {
+	/* If you add a thread that is higher than you (originally) then switch */
+	if(current_thread_ptr && current_thread_ptr->orig_priority > priority) {
+		/* Need to deage the thread if needed */
+		if(current_thread_ptr->aged_priority != current_thread_ptr->orig_priority && current_thread_ptr->pmp_flag ==0) {
+			deage_thread(current_thread_ptr);
+			next = find_next_best_thread_run();
+		}
 		current_thread_ptr->jumpFlag = 1;
 		current_thread_ptr->jumpTo = next;
-		OS_Suspend();
+		ContextSwitch();
 	}
   EndCritical(sr);
   
@@ -746,7 +756,7 @@ void OS_Sleep(uint32_t sleepTime){
   current_thread_ptr->jumpFlag = 1;
   current_thread_ptr->jumpTo = next_thread;
 
-	OS_Suspend();  // NOTE: thread going to sleep has to preserve next pointer
+	ContextSwitch();  // NOTE: thread going to sleep has to preserve next pointer
   EnableInterrupts();
 };  
 
@@ -771,7 +781,7 @@ void OS_Kill(void){
 	
 	current_thread_ptr->ticks = 0;
 
-	OS_Suspend();
+	ContextSwitch();
  
 	/* End atomic section */
   EnableInterrupts();
@@ -786,6 +796,16 @@ void OS_Kill(void){
 // output: none
 void OS_Suspend(void){
   long sr = StartCritical();
+	
+	/* Need to deage thread */
+	if(current_thread_ptr->aged_priority != current_thread_ptr->orig_priority && current_thread_ptr->pmp_flag ==0) {
+		deage_thread(current_thread_ptr);
+				
+		tcb* next = find_next_best_thread_run();
+		current_thread_ptr->jumpFlag = 1;
+		current_thread_ptr->jumpTo = next;
+	}
+		
   NVIC_ST_CURRENT_R = 0;
   ContextSwitch();
   EndCritical(sr);

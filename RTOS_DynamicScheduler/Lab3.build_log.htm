@@ -27,17 +27,35 @@ Project File Date:  04/06/2022
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Lab3'
-compiling Dynamic_tester.c...
-../RTOS_Labs_common/OS.h(303): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
+compiling OS.c...
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(303): warning:  #1295-D: Deprecated declaration get_int_percentage_time - give arg types
   long get_int_percentage_time ();
-../RTOS_Labs_common/OS.h(304): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(304): warning:  #1295-D: Deprecated declaration get_int_disable_time - give arg types
   void get_int_disable_time ();
-../RTOS_Labs_common/OS.h(337): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
+..\RTOS_Labs_common\../RTOS_Labs_common/OS.h(337): warning:  #1295-D: Deprecated declaration OS_NumThreads_Created - give arg types
    uint32_t OS_NumThreads_Created();
-Dynamic_tester.c: 3 warnings, 0 errors
+..\RTOS_Labs_common\../inc/TCB.h(41): warning:  #1-D: last line of file ends without a newline
+  #endif
+..\RTOS_Labs_common\OS.c(93): warning:  #1295-D: Deprecated declaration StartOS - give arg types
+  void StartOS();             /* defined in osasm.s */
+..\RTOS_Labs_common\OS.c(94): warning:  #1295-D: Deprecated declaration ContextSwitch - give arg types
+  void ContextSwitch();       /* defined in osasm.s */
+..\RTOS_Labs_common\OS.c(95): warning:  #1295-D: Deprecated declaration DisableInterrupts - give arg types
+  void DisableInterrupts();   /* defined in startup.s */
+..\RTOS_Labs_common\OS.c(96): warning:  #1295-D: Deprecated declaration EnableInterrupts - give arg types
+  void EnableInterrupts();    /* defined in startup.s */
+..\RTOS_Labs_common\OS.c(100): warning:  #1295-D: Deprecated declaration OS_CountMsTime_Timer5_UserTask - give arg types
+  void OS_CountMsTime_Timer5_UserTask(); /*Task for Timer 5 /MS Timer */
+..\RTOS_Labs_common\OS.c(101): warning:  #1295-D: Deprecated declaration OS_Time_Init - give arg types
+  void OS_Time_Init();
+..\RTOS_Labs_common\OS.c(102): warning:  #1295-D: Deprecated declaration OS_Increment_Time - give arg types
+  void OS_Increment_Time();
+..\RTOS_Labs_common\OS.c(1105): warning:  #1-D: last line of file ends without a newline
+  }
+..\RTOS_Labs_common\OS.c: 12 warnings, 0 errors
 linking...
-Program Size: Code=6044 RO-data=2152 RW-data=220 ZI-data=9716  
-".\Lab3.axf" - 0 Error(s), 3 Warning(s).
+Program Size: Code=6272 RO-data=2152 RW-data=220 ZI-data=9716  
+".\Lab3.axf" - 0 Error(s), 12 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -60,7 +78,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.5.0
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
