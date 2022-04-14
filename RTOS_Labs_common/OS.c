@@ -227,7 +227,7 @@ void SysTick_Handler(void) {
     current_thread_ptr->jumpTo = next_to_run;
 
     /* Update run ptrs ??*/ //TODO
-  } else if(higher_pri_thread_added_flag ==1) {
+  } else if(higher_pri_thread_added_flag > 0) {
     /* Clear flag */
     higher_pri_thread_added_flag = 0;
 		
@@ -348,7 +348,7 @@ void OS_Wait(Sema4Type *semaPt){
 			add_running_thread(semaPt->current_holding_thread);
 
       /* set flag so it does not get deaged in premption */
-      semaPt->current_holding_thread->pmp_flag = 1;
+      semaPt->current_holding_thread->pmp_flag++;
 		}
 		
 		/* Context switch to next best thread*/
@@ -374,9 +374,6 @@ void OS_Signal(Sema4Type *semaPt){
   long sr = StartCritical();
 	/* Increment value */
   semaPt->Value++;
-
-  /* Set signal for PMP */
-  current_thread_ptr->pmp_flag = 0;
   
 	/* There is someone blocked on this pointer */
 	if(semaPt->Value <= 0) {
@@ -389,6 +386,21 @@ void OS_Signal(Sema4Type *semaPt){
 		/* Remove from semaphore list */
 		semaPt->head = semaPt->head->sema_next;
 		
+    /* If current thread was pmp_flaged, then properly deage the thread */
+    /* Set signal for PMP */
+    if(current_thread_ptr->pmp_flag == 1) {
+      /* set pmp_flag to 0 */
+      current_thread_ptr->pmp_flag = 0;
+
+      remove_running_thread(current_thread_ptr);
+      current_thread_ptr->aged_priority = current_thread_ptr->orig_priority;
+      add_running_thread(current_thread_ptr);
+      
+    } else if (current_thread_ptr->pmp_flag > 1) {
+      /* Set pmp flag properly */
+      current_thread_ptr->pmp_flag--;
+    }
+
 		/* find next thread to run */
 		tcb* next = find_next_best_thread_run();
 		
