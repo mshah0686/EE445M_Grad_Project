@@ -362,7 +362,7 @@ void lower_blocking_thread() {
   OS_Kill();
 }
 
-void sema_test1_all_capture() {
+void sema_test2_all_capture() {
 	OS_Init();
 	OS_InitSemaphore(&pmp_test_sema, 1);
   NumCreated = 0;
@@ -407,7 +407,7 @@ void lower_thread_with_semaphore() {
   /* Should not deage until OS_Signal */
 }
 
-void sema_test1_all_capture() {
+void sema_test3_all_capture() {
 	OS_Init();
 	OS_InitSemaphore(&pmp_test_sema, 1);
   NumCreated = 0;
@@ -418,5 +418,5 @@ void sema_test1_all_capture() {
 
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
-  sema_test1_all_capture();
+  sema_test2_all_capture();
 }
