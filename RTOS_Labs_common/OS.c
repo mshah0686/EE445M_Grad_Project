@@ -391,7 +391,8 @@ void OS_Signal(Sema4Type *semaPt){
     if(current_thread_ptr->pmp_flag == 1) {
       /* set pmp_flag to 0 */
       current_thread_ptr->pmp_flag = 0;
-
+      
+      /* remove and then add thread to running list properly */
       remove_running_thread(current_thread_ptr);
       current_thread_ptr->aged_priority = current_thread_ptr->orig_priority;
       add_running_thread(current_thread_ptr);
