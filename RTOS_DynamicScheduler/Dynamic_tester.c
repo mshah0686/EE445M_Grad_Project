@@ -44,17 +44,7 @@
 #include "../RTOS_Labs_common/Interpreter.h"
 #include "../RTOS_Labs_common/ST7735.h"
 
-
-
 uint32_t NumCreated;   // number of foreground threads created
-uint32_t IdleCount;    // CPU idle counter
-uint32_t PIDWork;      // current number of PID calculations finished
-uint32_t FilterWork;   // number of digital filter calculations finished
-uint32_t NumSamples;   // incremented every ADC sample, in Producer
-#define FS 400              // producer/consumer sampling
-#define RUNLENGTH (20*FS)   // display results and quit when NumSamples==RUNLENGTH
-// 20-sec finite time experiment duration 
-
 
 //---------------------User debugging-----------------------
 
@@ -363,7 +353,7 @@ void lower_blocking_thread() {
   OS_Kill();
 }
 
-void sema_test2_all_capture() {
+void sema_test_pmp_basic() {
 	OS_Init();
 	OS_InitSemaphore(&pmp_test_sema, 1);
   NumCreated = 0;
@@ -409,7 +399,7 @@ void lower_thread_with_semaphore() {
   /* Should not deage until OS_Signal */
 }
 
-void sema_test3_all_capture() {
+void sema_test_pmp_moreThreads() {
 	OS_Init();
 	OS_InitSemaphore(&pmp_test_sema, 1);
   NumCreated = 0;
@@ -418,7 +408,142 @@ void sema_test3_all_capture() {
 	OS_Launch(TIME_2MS);
 }
 
+
+/****** Test Multiple Things ***********/
+void sleepy_toggle_thread() {
+	while(1) {
+		PF2 ^= 0x04;
+		OS_Sleep(1000);
+	}
+}
+
+void sleepy_toggle_thread_2() {
+	while(1) {
+		PF1 ^=0x02;
+    OS_Sleep(1000);
+	}
+}
+
+void testMain1_jitter() {
+	OS_Init();
+  NumCreated = 0;
+  PortD_Init();
+	
+	NumCreated += OS_AddThread(&PD0Toggle_thread, 128, 3);
+  NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 3);
+  NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 3);
+  NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 3);
+	NumCreated += OS_AddThread(&sleepy_toggle_thread, 128, 3);
+	NumCreated += OS_AddThread(&sleepy_toggle_thread_2, 128, 3);
+	
+	OS_Launch(TIME_2MS);
+}
+
+void sleepy_toggle_periodic_thread() {
+	PF3 ^= 0x08;
+}
+
+void testMain2_Jitter_Periodic() {
+	OS_Init();
+  NumCreated = 0;
+  PortD_Init();
+	
+	NumCreated += OS_AddThread(&PD0Toggle_thread, 128, 3);
+  NumCreated += OS_AddThread(&PD1Toggle_thread, 128, 3);
+  NumCreated += OS_AddThread(&PD2Toggle_thread, 128, 3);
+  NumCreated += OS_AddThread(&PD3Toggle_thread, 128, 3);
+	OS_AddPeriodicThread(&sleepy_toggle_periodic_thread, TIME_2MS * 50, 2);
+	NumCreated += OS_AddThread(&sleepy_toggle_thread, 128, 3);
+	NumCreated += OS_AddThread(&sleepy_toggle_thread_2, 128, 3);
+	
+	OS_Launch(TIME_2MS);
+}
+
+
+Sema4Type single_sema;
+void pf3_sema_thread() {
+	while(1) {
+		OS_Wait(&single_sema);
+		PF3 ^= 0x08;
+		OS_Signal(&single_sema);
+	}
+}
+
+void pf2_sema_thread() {
+	while(1) {
+		OS_Wait(&single_sema);
+		PF2 ^= 0x04;
+		OS_Signal(&single_sema);
+	}
+}
+
+void pf1_sema_thread() {
+	while(1) {
+		OS_Wait(&single_sema);
+		PF1 ^= 0x02;
+		OS_Signal(&single_sema);
+	}
+}
+
+void pf0_sema_thread() {
+	while(1) {
+		OS_Wait(&single_sema);
+		PF0 ^= 0x01;
+		OS_Signal(&single_sema);
+	}
+}
+
+void pd0_sema_thread() {
+	while(1) {
+		OS_Wait(&single_sema);
+		PD0 ^= 0x01;
+		OS_Signal(&single_sema);
+	}
+}
+
+void pd1_sema_thread() {
+	while(1) {
+		OS_Wait(&single_sema);
+		PD1 ^= 0x02;
+		OS_Signal(&single_sema);
+	}
+}
+
+void pd2_sema_thread() {
+	while(1) {
+		OS_Wait(&single_sema);
+		PD2 ^= 0x04;
+		OS_Signal(&single_sema);
+	}
+}
+
+void pd3_sema_thread() {
+	while(1) {
+		OS_Wait(&single_sema);
+		PD3 ^= 0x08;
+		OS_Signal(&single_sema);
+	}
+}
+
+void testMain3_semaCaptures() {
+	OS_Init();
+  NumCreated = 0;
+  PortD_Init();
+	OS_InitSemaphore(&single_sema, 1);
+	
+	NumCreated += OS_AddThread(&pd0_sema_thread, 128, 0);
+	NumCreated += OS_AddThread(&pd1_sema_thread, 128, 1);
+	NumCreated += OS_AddThread(&pd2_sema_thread, 128, 1);
+	NumCreated += OS_AddThread(&pd3_sema_thread, 128, 1);
+	NumCreated += OS_AddThread(&pf0_sema_thread, 128, 1);
+	NumCreated += OS_AddThread(&pf1_sema_thread, 128, 1);
+	NumCreated += OS_AddThread(&pf2_sema_thread, 128, 1);
+	NumCreated += OS_AddThread(&pf3_sema_thread, 128, 1);
+
+	OS_Launch(TIME_2MS);
+}
+
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
-  sema_test3_all_capture();
+  testMain3_semaCaptures();
 }

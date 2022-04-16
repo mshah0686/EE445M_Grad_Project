@@ -1,0 +1,14 @@
+.\complex_tests.o: Complex_Tests.c
+.\complex_tests.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\complex_tests.o: ../inc/tm4c123gh6pm.h
+.\complex_tests.o: ../inc/CortexM.h
+.\complex_tests.o: ../inc/LaunchPad.h
+.\complex_tests.o: ../inc/PLL.h
+.\complex_tests.o: ../inc/LPF.h
+.\complex_tests.o: ../RTOS_Labs_common/UART0int.h
+.\complex_tests.o: ../RTOS_Labs_common/ADC.h
+.\complex_tests.o: ../inc/ADCT0ATrigger.h
+.\complex_tests.o: ../inc/IRDistance.h
+.\complex_tests.o: ../RTOS_Labs_common/OS.h
+.\complex_tests.o: ../RTOS_Labs_common/Interpreter.h
+.\complex_tests.o: ../RTOS_Labs_common/ST7735.h

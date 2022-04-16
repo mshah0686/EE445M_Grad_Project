@@ -513,6 +513,26 @@
               <FileType>1</FileType>
               <FilePath>..\inc\Timer3A.c</FilePath>
             </File>
+            <File>
+              <FileName>Complex_Tests.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Complex_Tests.c</FilePath>
+            </File>
+            <File>
+              <FileName>Complex_Test.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Complex_Test.h</FilePath>
+            </File>
+            <File>
+              <FileName>LPF.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\lab-3-waa493_mhs2466\inc\LPF.c</FilePath>
+            </File>
+            <File>
+              <FileName>PID_stm32.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\lab-3-waa493_mhs2466\inc\PID_stm32.s</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
