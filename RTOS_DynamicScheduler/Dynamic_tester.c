@@ -388,6 +388,7 @@ void middle_thread_blocked() {
 void lower_thread_with_semaphore() {
   /* Should work really slowly, then get aged to middle thread priority */
   //while(1) {
+		PF2 ^= 0x04;
     OS_Wait(&pmp_test_sema);
     PF2 ^= 0x04;
     OS_AddThread(&middle_thread_blocked, 128, 3);
@@ -545,5 +546,5 @@ void testMain3_semaCaptures() {
 
 //*******************Trampoline for selecting main to execute**********
 int main(void) { 			// main 
-  testMain3_semaCaptures();
+  Test4_ManyThreads_DiffPri();
 }

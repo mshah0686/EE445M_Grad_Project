@@ -234,11 +234,14 @@ void SysTick_Handler(void) {
     current_thread_ptr->jumpFlag = 1;
     /* Set jump flag and jump tcb */
     current_thread_ptr->jumpTo = next_to_run;
+				
+		/* Clear higher priority thread_flag */
+		higher_pri_thread_added_flag = 0;
 
-    /* Update run ptrs ??*/ //TODO
   } else if(higher_pri_thread_added_flag > 0) {
     /* Clear flag */
     higher_pri_thread_added_flag = 0;
+		
 		
     /* find next best to run */
     tcb* next_to_run = find_next_best_thread_run();
